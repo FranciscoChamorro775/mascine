@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mascine – Favoritos</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- HEADER COMPARTIDO CON EL RESTO DE PÁGINAS -->
+    <header>
+        <h1>Mascine</h1>
+        <nav>
+            <a href="index.html">Cartelera</a>
+            <a href="#">Calendario</a>
+            <a href="#">Cines</a>
+            <a href="favoritos.html">Favoritos</a>
+            <a href="#">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- TÍTULO DE LA PÁGINA -->
+        <h2>Mis películas favoritas</h2>
+
+        <!-- BOTÓN PARA VOLVER A LA CARTELERA -->
+        <a href="index.html" class="btn-volver">← Volver a la cartelera</a>
+
+        <!-- CONTENEDOR DONDE SE PINTARÁN LAS PELÍCULAS FAVORITAS -->
+        <!-- Usamos la misma clase grid-peliculas para reutilizar el CSS -->
+        <section id="lista-favoritos" class="grid-peliculas">
+            <!-- Aquí se insertarán las tarjetas de películas favoritas desde favoritos.js -->
+        </section>
+
+        <!-- MENSAJE POR SI NO HAY FAVORITOS -->
+        <p id="mensaje-sin-favoritos" style="display:none;">
+            Todavía no tienes ninguna película en favoritos.
+        </p>
+    </main>
+
+    <!-- JS ESPECÍFICO PARA LA PÁGINA DE FAVORITOS -->
+    <script src="js/favoritos.js"></script>
+</body>
+</html>

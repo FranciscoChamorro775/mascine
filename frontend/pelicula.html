@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mascine – Detalle de película</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Mascine</h1>
+        <nav>
+            <a href="index.html">Cartelera</a>
+            <a href="#">Calendario</a>
+            <a href="#">Cines</a>
+            <a href="favoritos.html">Favoritos</a>
+            <a href="#">Login</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Título dinámico -->
+        <h2 id="titulo-pelicula">Cargando...</h2>
+
+        <!-- Botón volver -->
+        <a href="index.html" class="btn-volver">← Volver a la cartelera</a>
+
+        <!-- Contenedor principal -->
+        <div id="detalle-pelicula" class="detalle-container">
+
+            <!-- Poster -->
+            <img id="poster" class="poster-detalle" alt="Poster de la película">
+
+            <!-- Información -->
+            <div class="info-detalle">
+
+                <h3>Sinopsis</h3>
+                <p id="sinopsis"></p>
+
+                <p><strong>Género:</strong> <span id="genero"></span></p>
+
+                <!-- Tráiler -->
+                <div class="trailer-container">
+                    <iframe id="trailer" frameborder="0" allowfullscreen></iframe>
+                </div>
+
+                <!-- Botón favoritos -->
+                <button id="btn-favorito" class="btn-favorito">❤️ Añadir a favoritos</button>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/pelicula.js"></script>
+    
+</body>
+</html>
+
