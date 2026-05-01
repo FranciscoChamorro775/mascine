@@ -1,13 +1,9 @@
 const mysql = require("mysql2/promise");
 
-// Cargar .env SOLO si existe (local). En Railway NO existe.
-try {
+if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
-} catch (e) {
-    console.log("No .env file loaded (production mode)");
 }
 
-// Debug para ver qué variables está usando Railway
 console.log("MYSQLHOST:", process.env.MYSQLHOST);
 console.log("MYSQLUSER:", process.env.MYSQLUSER);
 console.log("MYSQLPASSWORD:", process.env.MYSQLPASSWORD);
@@ -21,7 +17,7 @@ const db = mysql.createPool({
     database: process.env.MYSQLDATABASE,
     port: process.env.MYSQLPORT,
     ssl: {
-        rejectUnauthorized: true
+        rejectUnauthorized: false   // ← ESTA ES LA CLAVE
     }
 });
 
