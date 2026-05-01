@@ -1,0 +1,7 @@
+Usuario normal:
+email: usuario@mascine.com
+password: XXXX
+
+Administrador:
+email: admin@mascine.com
+password: XXXX

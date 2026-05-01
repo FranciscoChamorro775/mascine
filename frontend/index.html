@@ -4,22 +4,20 @@
   <meta charset="UTF-8">
   <title>Mascine – Cartelera</title>
 
-  <!-- Enlazamos el archivo CSS donde estará el diseño -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- HEADER: zona superior con el título y el menú -->
+  <!-- HEADER -->
   <header>
     <h1>Mascine</h1>
 
-    <!-- Menú de navegación -->
     <nav>
       <a href="index.html">Cartelera</a>
       <a href="calendario.html">Calendario</a>
-      <a href="#">Cines</a>
+      <a href="cines.html">Cines</a>
       <a href="favoritos.html">Favoritos</a>
-      <a href="#">Login</a>
+      <a href="login.html">Login</a>
     </nav>
   </header>
 
@@ -27,7 +25,6 @@
   <main>
     <h2>Películas en cartelera</h2>
 
-    <!-- BUSCADOR -->
     <div class="buscador">
       <input 
         type="text" 
@@ -36,18 +33,14 @@
       >
     </div>
 
-    <!-- Mensaje de carga -->
     <p id="mensaje-cargando">Cargando películas...</p>
-
-    <!-- Mensaje no hay películas -->
     <p id="mensaje-vacio" style="display:none;">No hay películas disponibles.</p>
 
-    <!-- Contenedor donde se pintarán las tarjetas de películas -->
     <div id="lista-peliculas" class="grid-peliculas"></div>
   </main>
 
-  <!-- Enlazamos el archivo JS que contiene la lógica del frontend -->
-  <script src="js/app.js"></script>
+  <!-- SCRIPT CORRECTO -->
+  <script src="js/cartelera.js"></script>
 </body>
 </html>
 

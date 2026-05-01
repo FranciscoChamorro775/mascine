@@ -1,7 +1,11 @@
 // -----------------------------
-// FAVORITOS – FRONTEND
+// FAVORITOS – FRONTEND (versión final)
 // -----------------------------
 
+// URL del backend en Railway
+const API_URL = "https://mascine-production.up.railway.app";
+
+// Elementos del DOM
 const contenedor = document.getElementById("lista-favoritos");
 const mensajeVacio = document.getElementById("mensaje-sin-favoritos");
 
@@ -20,7 +24,8 @@ async function cargarFavoritos() {
     }
 
     try {
-        const res = await fetch("http://localhost:3000/favoritos", {
+        // Petición al backend online
+        const res = await fetch(`${API_URL}/favoritos`, {
             headers: {
                 "Authorization": "Bearer " + token
             }
@@ -28,9 +33,17 @@ async function cargarFavoritos() {
 
         const favoritos = await res.json();
 
+        // Si el backend devuelve error
+        if (!res.ok) {
+            mensajeVacio.style.display = "block";
+            mensajeVacio.textContent = favoritos.mensaje || "Error cargando favoritos.";
+            return;
+        }
+
         // Si no hay favoritos
         if (!favoritos || favoritos.length === 0) {
             mensajeVacio.style.display = "block";
+            mensajeVacio.textContent = "Todavía no tienes películas en favoritos.";
             return;
         }
 
@@ -47,6 +60,8 @@ async function cargarFavoritos() {
 // 2. Pintar tarjetas de películas favoritas
 function pintarFavoritos(lista) {
 
+    contenedor.innerHTML = ""; // limpiar antes de pintar
+
     lista.forEach(fav => {
 
         // Cada "fav" viene con: id_favorito, id_pelicula, titulo, poster_url
@@ -62,7 +77,7 @@ function pintarFavoritos(lista) {
             </button>
         `;
 
-        // Hacer clic en la tarjeta → ir al detalle
+        // Clic en la tarjeta → ir al detalle (menos en el botón eliminar)
         tarjeta.addEventListener("click", (e) => {
             if (e.target.classList.contains("btn-eliminar")) return;
             window.location.href = `pelicula.html?id=${fav.id_pelicula}`;
@@ -84,7 +99,7 @@ async function eliminarFavorito(idFavorito) {
     const token = localStorage.getItem("token");
 
     try {
-        const res = await fetch(`http://localhost:3000/favoritos/${idFavorito}`, {
+        const res = await fetch(`${API_URL}/favoritos/${idFavorito}`, {
             method: "DELETE",
             headers: {
                 "Authorization": "Bearer " + token
@@ -95,7 +110,7 @@ async function eliminarFavorito(idFavorito) {
 
         if (res.ok) {
             alert("Película eliminada de favoritos");
-            location.reload(); // recargar la lista
+            cargarFavoritos(); // recargar lista sin refrescar toda la página
         } else {
             alert("Error: " + data.mensaje);
         }
