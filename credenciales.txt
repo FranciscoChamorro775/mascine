@@ -1,7 +1,5 @@
 Usuario normal:
 email: usuario@mascine.com
-password: XXXX
+password: 1234
 
-Administrador:
-email: admin@mascine.com
-password: XXXX
+
