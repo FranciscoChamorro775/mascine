@@ -1,5 +1,4 @@
 // backend/controllers/usuariosController.js
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Usuario = require("../models/Usuario");
 
@@ -7,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "clave_secreta_super_segura";
 
 class UsuariosController {
 
-    // Registro
+    // Registro SIN bcrypt
     static async registro(req, res) {
         try {
             const { nombre, email, password } = req.body;
@@ -22,11 +21,8 @@ class UsuariosController {
                 return res.status(400).json({ error: "El email ya está registrado" });
             }
 
-            // Hash de contraseña
-            const passwordHash = await bcrypt.hash(password, 10);
-
-            // Crear usuario
-            const id = await Usuario.crear(nombre, email, passwordHash);
+            // Guardar contraseña en texto plano
+            const id = await Usuario.crear(nombre, email, password);
 
             res.json({ mensaje: "Usuario registrado correctamente", id_usuario: id });
 
@@ -36,7 +32,7 @@ class UsuariosController {
         }
     }
 
-    // Login
+    // Login SIN bcrypt
     static async login(req, res) {
         try {
             const { email, password } = req.body;
@@ -50,8 +46,9 @@ class UsuariosController {
                 return res.status(400).json({ error: "Credenciales incorrectas" });
             }
 
-            // Comparar contraseña
-            const coincide = await bcrypt.compare(password, usuario.password_hash);
+            // Comparación directa
+            const coincide = password === usuario.password_hash;
+
             if (!coincide) {
                 return res.status(400).json({ error: "Credenciales incorrectas" });
             }
