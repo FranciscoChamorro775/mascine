@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mascine – Favoritos</title>
+
+    <!-- Tipografía Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Tu CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,11 +22,11 @@
     <header>
         <h1>Mascine</h1>
         <nav>
-            <a href="index.html">Cartelera</a>
-            <a href="calendario.html">Calendario</a>
-            <a href="cines.html">Cines</a>
-            <a href="favoritos.html">Favoritos</a>
-            <a href="login.html">Login</a>
+            <a href="index.html"><i class="fa-solid fa-film"></i> Cartelera</a>
+            <a href="calendario.html"><i class="fa-solid fa-calendar-days"></i> Calendario</a>
+            <a href="cines.html"><i class="fa-solid fa-location-dot"></i> Cines</a>
+            <a href="favoritos.html"><i class="fa-solid fa-heart"></i> Favoritos</a>
+            <a href="login.html"><i class="fa-solid fa-user"></i> Login</a>
         </nav>
     </header>
 
@@ -25,7 +35,9 @@
         <h2>Mis películas favoritas</h2>
 
         <!-- BOTÓN PARA VOLVER A LA CARTELERA -->
-        <a href="index.html" class="btn-volver">← Volver a la cartelera</a>
+        <a href="index.html" class="btn-volver">
+            <i class="fa-solid fa-arrow-left"></i> Volver a la cartelera
+        </a>
 
         <!-- CONTENEDOR DONDE SE PINTARÁN LAS PELÍCULAS FAVORITAS -->
         <section id="lista-favoritos" class="grid-peliculas">
@@ -40,5 +52,10 @@
 
     <!-- JS ESPECÍFICO PARA LA PÁGINA DE FAVORITOS -->
     <script src="js/favoritos.js"></script>
+    <footer class="footer">
+    <p>Mascine © 2026 – Proyecto TFG</p>
+    <p>Desarrollado por Francisco</p>
+</footer>
 </body>
 </html>
+

@@ -1,11 +1,22 @@
 /* ============================
-   ESTILOS GENERALES
+   ESTILOS GENERALES (MODERNIZADOS)
 ============================ */
 
+:root {
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-card: #ffffff;
+  --color-primary: #e50914;
+  --color-primary-hover: #b20710;
+  --color-text: #f1f5f9;
+  --color-muted: #94a3b8;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Poppins", Arial, sans-serif;
   margin: 0;
-  background: #f5f5f5;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 main {
@@ -17,24 +28,33 @@ main {
 ============================ */
 
 header {
-  background: #111;
+  background: #111827;
   color: white;
-  padding: 15px 20px;
+  padding: 15px 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 header nav a {
-  color: white;
-  margin-left: 15px;
+  color: var(--color-text);
+  margin-left: 20px;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: 0.2s;
 }
 
 header nav a:hover {
-  color: #ffcc00;
+  color: var(--color-primary);
+  transform: translateY(-2px);
 }
 
 /* ============================
@@ -48,22 +68,24 @@ header nav a:hover {
 }
 
 .tarjeta-pelicula {
-  background: white;
+  background: var(--color-bg-alt);
   padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .tarjeta-pelicula:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
 .tarjeta-pelicula img {
   width: 100%;
-  border-radius: 8px;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 /* ============================
@@ -74,7 +96,7 @@ header nav a:hover {
   display: inline-block;
   margin-bottom: 20px;
   padding: 8px 14px;
-  background-color: #333;
+  background-color: #1e293b;
   color: white;
   text-decoration: none;
   border-radius: 6px;
@@ -82,7 +104,8 @@ header nav a:hover {
 }
 
 .btn-volver:hover {
-  background-color: #555;
+  background-color: #334155;
+  transform: translateY(-2px);
 }
 
 /* ============================
@@ -95,13 +118,14 @@ header nav a:hover {
   padding: 20px;
   max-width: 900px;
   margin: auto;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: var(--color-bg-alt);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .poster-detalle {
   transition: transform 0.3s;
+  border-radius: 10px;
 }
 
 .poster-detalle:hover {
@@ -114,7 +138,8 @@ header nav a:hover {
 
 .info-detalle h3 {
   margin-top: 0;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
+  color: var(--color-text);
 }
 
 .trailer-container {
@@ -149,17 +174,19 @@ header nav a:hover {
 .btn-favorito {
   margin-top: 20px;
   padding: 10px 16px;
-  background-color: #e50914;
+  background: var(--color-primary);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
-  transition: 0.3s;
+  font-weight: 600;
+  transition: 0.25s ease;
 }
 
 .btn-favorito:hover {
-  background-color: #b20710;
+  background: var(--color-primary-hover);
+  transform: translateY(-2px);
 }
 
 /* ============================
@@ -169,16 +196,17 @@ header nav a:hover {
 .form-container {
   max-width: 400px;
   margin: 30px auto;
-  background: white;
+  background: var(--color-bg-alt);
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 form label {
   display: block;
   margin-top: 10px;
   font-weight: bold;
+  color: var(--color-text);
 }
 
 form input {
@@ -186,23 +214,27 @@ form input {
   padding: 10px;
   margin-top: 5px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: var(--color-text);
 }
 
 form button {
   width: 100%;
   margin-top: 20px;
   padding: 10px;
-  background: #111;
+  background: var(--color-primary);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
+  font-weight: 600;
 }
 
 form button:hover {
-  background: #333;
+  background: var(--color-primary-hover);
+  transform: translateY(-2px);
 }
 
 /* ============================
@@ -210,11 +242,12 @@ form button:hover {
 ============================ */
 
 .favorito-card {
-  background: white;
+  background: var(--color-bg-alt);
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .btn-eliminar {
@@ -225,10 +258,12 @@ form button:hover {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: 0.25s ease;
 }
 
 .btn-eliminar:hover {
   background: #c9302c;
+  transform: translateY(-2px);
 }
 
 /* ============================
@@ -248,27 +283,29 @@ form button:hover {
 }
 
 .calendario th {
-  background-color: #333;
+  background-color: #1e293b;
   color: white;
   padding: 10px;
 }
 
 .calendario td {
-  border: 1px solid #ccc;
+  border: 1px solid #334155;
   padding: 12px;
   height: 50px;
   cursor: pointer;
   transition: background 0.2s ease;
+  color: var(--color-text);
 }
 
 .calendario td:hover {
-  background-color: #f0f0f0;
+  background-color: #1e293b;
 }
 
 .calendario td.estreno {
   background-color: #ffe8b3;
   border: 2px solid #ffb300;
   font-weight: bold;
+  color: #111;
 }
 
 .calendario td.estreno:hover {
@@ -287,6 +324,7 @@ form button:hover {
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 4px;
+  color: #111;
 }
 
 .estreno-item h4 {
@@ -297,4 +335,23 @@ form button:hover {
 .estreno-item p {
   margin: 5px 0 0;
   color: #555;
+}
+
+
+/* ============================
+   FOOTER PROFESIONAL
+============================ */
+
+.footer {
+  margin-top: 40px;
+  padding: 20px;
+  text-align: center;
+  background: #111827;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.footer p {
+  margin: 5px 0;
 }
