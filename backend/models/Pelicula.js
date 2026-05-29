@@ -42,7 +42,7 @@ const Pelicula = {
     getEstrenos: async () => {
          try {
             const [results] = await db.query(
-                "SELECT * FROM peliculas WHERE fecha_estr IS NOT NULL ORDER BY fecha_estr ASC"
+                "SELECT * FROM peliculas WHERE fecha_estreno IS NOT NULL ORDER BY fecha_estreno ASC"
             );
             return results;
         } catch (err) {
@@ -98,4 +98,3 @@ const Pelicula = {
 };
 
 module.exports = Pelicula;
-
