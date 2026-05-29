@@ -1,122 +1,111 @@
 // -----------------------------
-// FAVORITOS – FRONTEND (versión final)
+// FAVORITOS – FRONTEND
 // -----------------------------
 
-// URL del backend en Railway
-const API_URL = "https://mascine-production.up.railway.app";
+const API_URL   = "https://mascine-production.up.railway.app";
+const contenedor    = document.getElementById("lista-favoritos");
+const mensajeVacio  = document.getElementById("mensaje-sin-favoritos");
 
-// Elementos del DOM
-const contenedor = document.getElementById("lista-favoritos");
-const mensajeVacio = document.getElementById("mensaje-sin-favoritos");
-
-// 1. Cargar favoritos al iniciar la página
 document.addEventListener("DOMContentLoaded", cargarFavoritos);
 
+// 1. Cargar favoritos
 async function cargarFavoritos() {
+  const token = localStorage.getItem("token");
 
-    const token = localStorage.getItem("token");
+  if (!token) {
+    mensajeVacio.style.display  = "block";
+    mensajeVacio.textContent    = "Debes iniciar sesión para ver tus favoritos.";
+    return;
+  }
 
-    // Si no hay token → no puede ver favoritos
-    if (!token) {
-        mensajeVacio.style.display = "block";
-        mensajeVacio.textContent = "Debes iniciar sesión para ver tus favoritos.";
-        return;
+  try {
+    const res = await fetch(`${API_URL}/favoritos`, {
+      headers: { "Authorization": "Bearer " + token }
+    });
+
+    const favoritos = await res.json();
+
+    if (!res.ok) {
+      mensajeVacio.style.display  = "block";
+      mensajeVacio.textContent    = favoritos.error || favoritos.mensaje || "Error cargando favoritos.";
+      return;
     }
 
-    try {
-        // Petición al backend online
-        const res = await fetch(`${API_URL}/favoritos`, {
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        });
-
-        const favoritos = await res.json();
-
-        // Si el backend devuelve error
-        if (!res.ok) {
-            mensajeVacio.style.display = "block";
-            mensajeVacio.textContent = favoritos.mensaje || "Error cargando favoritos.";
-            return;
-        }
-
-        // Si no hay favoritos
-        if (!favoritos || favoritos.length === 0) {
-            mensajeVacio.style.display = "block";
-            mensajeVacio.textContent = "Todavía no tienes películas en favoritos.";
-            return;
-        }
-
-        // Si hay favoritos → pintarlos
-        pintarFavoritos(favoritos);
-
-    } catch (error) {
-        console.error("Error cargando favoritos:", error);
-        mensajeVacio.style.display = "block";
-        mensajeVacio.textContent = "Error cargando favoritos.";
+    if (!favoritos || favoritos.length === 0) {
+      mensajeVacio.style.display  = "block";
+      mensajeVacio.textContent    = "Todavía no tienes películas en favoritos.";
+      return;
     }
+
+    mensajeVacio.style.display = "none";
+    pintarFavoritos(favoritos);
+
+  } catch (error) {
+    console.error("Error cargando favoritos:", error);
+    mensajeVacio.style.display  = "block";
+    mensajeVacio.textContent    = "No se pudo conectar con el servidor.";
+  }
 }
 
-// 2. Pintar tarjetas de películas favoritas
+// 2. Pintar tarjetas
 function pintarFavoritos(lista) {
+  contenedor.innerHTML = "";
 
-    contenedor.innerHTML = ""; // limpiar antes de pintar
+  lista.forEach(fav => {
+    const tarjeta = document.createElement("div");
+    tarjeta.classList.add("tarjeta-pelicula");
 
-    lista.forEach(fav => {
+    const img = document.createElement("img");
+    img.src   = fav.poster_url || "img/no-poster.png";
+    img.alt   = fav.titulo;
+    img.onerror = () => { img.src = "img/no-poster.png"; };
 
-        // Cada "fav" viene con: id_favorito, id_pelicula, titulo, poster_url
-        const tarjeta = document.createElement("div");
-        tarjeta.classList.add("tarjeta-pelicula");
+    tarjeta.appendChild(img);
+    tarjeta.innerHTML += `
+      <h3>${fav.titulo}</h3>
+      <p>${fav.genero || ""}</p>
+      <button class="btn-eliminar" data-id="${fav.id_favorito}">
+        ❌ Quitar
+      </button>
+    `;
 
-        tarjeta.innerHTML = `
-            <img src="${fav.poster_url || 'img/no-poster.png'}" alt="${fav.titulo}">
-            <h3>${fav.titulo}</h3>
-
-            <button class="btn-eliminar" data-id="${fav.id_favorito}">
-                ❌ Quitar
-            </button>
-        `;
-
-        // Clic en la tarjeta → ir al detalle (menos en el botón eliminar)
-        tarjeta.addEventListener("click", (e) => {
-            if (e.target.classList.contains("btn-eliminar")) return;
-            window.location.href = `pelicula.html?id=${fav.id_pelicula}`;
-        });
-
-        // Botón eliminar favorito
-        tarjeta.querySelector(".btn-eliminar").addEventListener("click", (e) => {
-            e.stopPropagation(); // evitar que abra la ficha
-            eliminarFavorito(fav.id_favorito);
-        });
-
-        contenedor.appendChild(tarjeta);
+    // Clic en tarjeta → detalle (excepto en el botón)
+    tarjeta.addEventListener("click", (e) => {
+      if (e.target.classList.contains("btn-eliminar")) return;
+      window.location.href = `pelicula.html?id=${fav.id_pelicula}`;
     });
+
+    // Botón eliminar
+    tarjeta.querySelector(".btn-eliminar").addEventListener("click", (e) => {
+      e.stopPropagation();
+      eliminarFavorito(fav.id_favorito);
+    });
+
+    contenedor.appendChild(tarjeta);
+  });
 }
 
 // 3. Eliminar favorito
 async function eliminarFavorito(idFavorito) {
+  const token = localStorage.getItem("token");
 
-    const token = localStorage.getItem("token");
+  try {
+    const res  = await fetch(`${API_URL}/favoritos/${idFavorito}`, {
+      method: "DELETE",
+      headers: { "Authorization": "Bearer " + token }
+    });
 
-    try {
-        const res = await fetch(`${API_URL}/favoritos/${idFavorito}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        });
+    const data = await res.json();
 
-        const data = await res.json();
-
-        if (res.ok) {
-            alert("Película eliminada de favoritos");
-            cargarFavoritos(); // recargar lista sin refrescar toda la página
-        } else {
-            alert("Error: " + data.mensaje);
-        }
-
-    } catch (error) {
-        console.error("Error eliminando favorito:", error);
-        alert("No se pudo eliminar el favorito.");
+    if (res.ok) {
+      alert("Película eliminada de favoritos");
+      cargarFavoritos();
+    } else {
+      alert("Error: " + (data.error || data.mensaje || "No se pudo eliminar"));
     }
+
+  } catch (error) {
+    console.error("Error eliminando favorito:", error);
+    alert("No se pudo eliminar el favorito.");
+  }
 }

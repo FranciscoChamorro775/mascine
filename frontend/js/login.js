@@ -2,37 +2,43 @@
 // LOGIN – FRONTEND
 // -----------------------------
 
-const API_URL = "https://mascine-production.up.railway.app/usuarios/login";
+const API_URL = "https://mascine-production.up.railway.app";
 
 document.getElementById("form-login").addEventListener("submit", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+  const email    = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-    try {
-        const res = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
+  if (!email || !password) {
+    alert("Por favor, rellena todos los campos.");
+    return;
+  }
 
-        const data = await res.json();
+  try {
+    const res = await fetch(`${API_URL}/usuarios/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
 
-        if (!res.ok) {
-            alert(data.mensaje || "Credenciales incorrectas");
-            return;
-        }
+    const data = await res.json();
 
-        // Guardar token y usuario
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("usuario", JSON.stringify(data.usuario));
-
-        alert("Inicio de sesión correcto");
-        window.location.href = "index.html";
-
-    } catch (error) {
-        console.error("Error en login:", error);
-        alert("No se pudo iniciar sesión");
+    if (!res.ok) {
+      // El backend devuelve { error: "..." } en los errores
+      alert(data.error || data.mensaje || "Credenciales incorrectas");
+      return;
     }
+
+    // Guardar token y usuario en localStorage
+    localStorage.setItem("token",   data.token);
+    localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+    alert("✅ Inicio de sesión correcto");
+    window.location.href = "index.html";
+
+  } catch (error) {
+    console.error("Error en login:", error);
+    alert("No se pudo conectar con el servidor. Inténtalo de nuevo.");
+  }
 });

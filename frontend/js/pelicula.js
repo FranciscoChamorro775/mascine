@@ -1,77 +1,72 @@
 // -----------------------------
-// OBTENER ID DE LA PELÍCULA DESDE LA URL
+// FICHA DE PELÍCULA – FRONTEND
 // -----------------------------
 
-// Ejemplo de URL: pelicula.html?id=5
 const params = new URLSearchParams(window.location.search);
-const id = params.get("id"); // ← ID de la película
-
-// Variable global donde guardaremos los datos de la película
-let pelicula = null;
-
-// URL base del backend desplegado en Railway
+const id     = params.get("id");
 const API_URL = "https://mascine-production.up.railway.app";
 
+let pelicula = null;
 
-// -----------------------------
-// 1. Cargar datos de la película desde el backend
-// -----------------------------
+// 1. Cargar datos desde el backend
 async function cargarPelicula() {
-  try {
-    // Petición GET al backend → /peliculas/:id
-    const res = await fetch(`${API_URL}/peliculas/${id}`);
-    pelicula = await res.json();
+  if (!id) {
+    document.getElementById("titulo-pelicula").textContent = "Película no encontrada";
+    return;
+  }
 
-    // Pintar en pantalla
+  try {
+    const res = await fetch(`${API_URL}/peliculas/${id}`);
+
+    if (!res.ok) {
+      document.getElementById("titulo-pelicula").textContent = "Película no encontrada";
+      return;
+    }
+
+    pelicula = await res.json();
     pintarPelicula(pelicula);
 
   } catch (error) {
     console.error("Error cargando la película:", error);
+    document.getElementById("titulo-pelicula").textContent = "Error al cargar la película";
   }
 }
 
-
-// -----------------------------
-// 2. Pintar la información de la película en el HTML
-// -----------------------------
+// 2. Pintar información en el HTML
 function pintarPelicula(p) {
 
-  // Título principal
-  document.getElementById("titulo-pelicula").textContent = p.titulo;
+  document.getElementById("titulo-pelicula").textContent = p.titulo || "Sin título";
 
-  // Poster
-  document.getElementById("poster").src = p.poster_url || "img/no-poster.png";
-  document.getElementById("poster").alt = p.titulo;
+  // Poster con fallback
+  const poster = document.getElementById("poster");
+  poster.src = p.poster_url || "img/no-poster.png";
+  poster.alt = p.titulo;
+  poster.onerror = () => { poster.src = "img/no-poster.png"; };
 
-  // Sinopsis
-  document.getElementById("sinopsis").textContent = p.sinopsis;
+  // Sinopsis y género  ← BUG CORREGIDO: antes no se mostraban
+  document.getElementById("sinopsis").textContent = p.sinopsis || "Sin sinopsis disponible";
+  document.getElementById("genero").textContent   = p.genero   || "No disponible";
 
-  // Género
-  document.getElementById("genero").textContent = p.genero || "N/D";
-
-  // Tráiler (si existe)
-  if (p.trailer_url) {
-    // Convertir URL tipo watch?v= a formato embed
-    const videoId = p.trailer_url.split("v=")[1];
-    document.getElementById("trailer").src = `https://www.youtube.com/embed/${videoId}`;
+  // Tráiler
+  const trailer = document.getElementById("trailer");
+  if (p.trailer_url && p.trailer_url.includes("v=")) {
+    const videoId = p.trailer_url.split("v=")[1].split("&")[0];
+    trailer.src = `https://www.youtube.com/embed/${videoId}`;
+  } else if (p.trailer_url && p.trailer_url.includes("youtu.be/")) {
+    const videoId = p.trailer_url.split("youtu.be/")[1].split("?")[0];
+    trailer.src = `https://www.youtube.com/embed/${videoId}`;
   } else {
-    // Si no hay tráiler → ocultar iframe
-    document.getElementById("trailer").style.display = "none";
+    trailer.parentElement.style.display = "none";
   }
 
-  // Activar botón de favoritos
+  // Botón favorito
   document.getElementById("btn-favorito").addEventListener("click", agregarFavorito);
 }
 
-
-// -----------------------------
-// 3. Añadir película a favoritos (requiere login)
-// -----------------------------
+// 3. Añadir a favoritos
 async function agregarFavorito() {
-
   const token = localStorage.getItem("token");
 
-  // Si no está logueado → redirigir al login
   if (!token) {
     alert("Debes iniciar sesión para añadir favoritos.");
     window.location.href = "login.html";
@@ -79,35 +74,27 @@ async function agregarFavorito() {
   }
 
   try {
-    // Petición POST al backend → /favoritos
     const respuesta = await fetch(`${API_URL}/favoritos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + token // ← Token JWT
+        "Authorization": "Bearer " + token
       },
-      body: JSON.stringify({
-        id_pelicula: Number(id) // ID de la película actual
-      })
+      body: JSON.stringify({ id_pelicula: Number(id) })
     });
 
     const data = await respuesta.json();
 
     if (respuesta.ok) {
-      alert("Película añadida a favoritos ❤️");
+      alert("✅ Película añadida a favoritos");
     } else {
-      alert("Error: " + data.mensaje);
+      alert("Error: " + (data.mensaje || data.error || "No se pudo añadir"));
     }
 
   } catch (error) {
     console.error("Error al añadir favorito:", error);
-    alert("No se pudo añadir a favoritos.");
+    alert("No se pudo añadir a favoritos. Comprueba tu conexión.");
   }
 }
 
-
-// -----------------------------
-// 4. Ejecutar al cargar la página
-// -----------------------------
 cargarPelicula();
-
