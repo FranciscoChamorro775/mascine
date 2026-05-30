@@ -22,7 +22,6 @@ CREATE TABLE usuarios (
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Índices recomendados
 CREATE INDEX idx_usuarios_email ON usuarios(email);
 
 -- ============================================================
@@ -42,9 +41,8 @@ CREATE TABLE peliculas (
     fecha_estreno DATE
 );
 
--- Índices recomendados
 CREATE INDEX idx_peliculas_titulo ON peliculas(titulo);
-CREATE INDEX idx_peliculas_fecha ON peliculas(fecha_estreno);
+CREATE INDEX idx_peliculas_fecha  ON peliculas(fecha_estreno);
 
 -- ============================================================
 --   TABLA: favoritos (relación N:N usuarios ↔ peliculas)
@@ -52,28 +50,28 @@ CREATE INDEX idx_peliculas_fecha ON peliculas(fecha_estreno);
 
 CREATE TABLE favoritos (
     id_favorito INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
+    id_usuario  INT NOT NULL,
     id_pelicula INT NOT NULL,
 
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
-        ON DELETE CASCADE,
-    FOREIGN KEY (id_pelicula) REFERENCES peliculas(id_pelicula)
-        ON DELETE CASCADE
+    -- ── BUG FIX: evita duplicados a nivel de base de datos ──────────────
+    CONSTRAINT uq_usuario_pelicula UNIQUE (id_usuario, id_pelicula),
+    -- ────────────────────────────────────────────────────────────────────
+
+    FOREIGN KEY (id_usuario)  REFERENCES usuarios(id_usuario)  ON DELETE CASCADE,
+    FOREIGN KEY (id_pelicula) REFERENCES peliculas(id_pelicula) ON DELETE CASCADE
 );
 
--- Índices recomendados
-CREATE INDEX idx_fav_usuario ON favoritos(id_usuario);
+CREATE INDEX idx_fav_usuario  ON favoritos(id_usuario);
 CREATE INDEX idx_fav_pelicula ON favoritos(id_pelicula);
 
 -- ============================================================
---   TABLA OPCIONAL: cines
---   (solo si quieres almacenar cines manualmente)
+--   TABLA: cines
 -- ============================================================
 
 CREATE TABLE cines (
-    id_cine INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(200) NOT NULL,
+    id_cine  INT AUTO_INCREMENT PRIMARY KEY,
+    nombre   VARCHAR(200) NOT NULL,
     direccion VARCHAR(255),
-    latitud DECIMAL(10,7),
+    latitud  DECIMAL(10,7),
     longitud DECIMAL(10,7)
 );
