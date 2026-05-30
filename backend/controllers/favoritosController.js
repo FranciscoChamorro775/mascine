@@ -12,9 +12,16 @@ class FavoritosController {
                 return res.status(400).json({ error: "Falta id_pelicula" });
             }
 
+            // ── BUG FIX: comprobar si ya existe antes de insertar ──────────
+            const yaExiste = await Favorito.existe(id_usuario, id_pelicula);
+            if (yaExiste) {
+                return res.status(409).json({ error: "Esta película ya está en tus favoritos" });
+            }
+            // ──────────────────────────────────────────────────────────────
+
             const id_favorito = await Favorito.agregar(id_usuario, id_pelicula);
 
-            res.json({
+            res.status(201).json({
                 mensaje: "Película agregada a favoritos",
                 id_favorito
             });
